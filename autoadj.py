@@ -55,12 +55,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     maxfound=False
     working=False
     while i<=len(data):
-        remaining=len(data)//size+bool(len(data)%size)
+        remaining=len(data)//usize+bool(len(data)%usize)
         print("sending packet(packetsize:",size," max possible:",msize,"):",(counter),"/(max possible)",remaining)
         sent=False
         timeout=0
         while not sent:
             partdata=data[i:i+size]
+            print(len(partdata))
             a=int(not((i+size)<len(data)))
             msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
             #print(msg)
