@@ -92,6 +92,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print("time taken:",time.perf_counter()-exectime)
     print("message: ", data,"\nadded message :",addedmsg,"\n")
     print("data and sent data are the same:",data==addedmsg)
+    print("transaction id:",tid)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
 if __name__=="__main__":
