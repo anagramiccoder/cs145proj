@@ -26,6 +26,10 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(size,len(data))
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
+    wrongchecksum=False
+    counter=0
+    timouts=0
+    tid=transid.decode()
     exectime=time.perf_counter()
     partdata=data[1]
     msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST0{partdata}"
@@ -37,13 +41,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(ptime)
     client.settimeout(ptime)
     size=floor(len(data)/(110/ptime))
+    counter+=1
     #assume within 90 seconds
-    i=0
-    wrongchecksum=False
-    counter=0
-    timouts=0
-    sizeFound=False
-    tid=transid.decode()
     div=[data[j:j+size] for j in range(1,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
