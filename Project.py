@@ -1,4 +1,5 @@
 import hashlib
+from math import ceil
 from opcode import hasjabs
 import sys
 import socket
@@ -18,12 +19,14 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
+    sendtime=time.perf_counter()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
+    socket.settimeout(ceil(exectime-sendtime)+1)
     #assume within 90 seconds
     if size==-1:
-        size=(len(data)//90)*tout
+        size=(len(data)//90)*(ceil(exectime-sendtime)+1)
     i=0
     wrongchecksum=False
     counter=0
@@ -48,7 +51,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             if counter==0:
                 if size>2:
                     size=size-1
-    print("time taken:",exectime-time.perf_counter())
+    print("time taken:",time.perf_counter()-exectime)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
 if __name__=="__main__":
