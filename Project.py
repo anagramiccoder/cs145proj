@@ -11,7 +11,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     tout=10
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
-    client.settimeout(10)
+    client.settimeout(15)
     #codes here
     #stage1-> transaction ID
     msg="ID"+uid
@@ -19,7 +19,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    halfdata=len(data)//2
+    halfdata=len(data)//3
     adder=halfdata//3
     sizelist=[halfdata+adder*z for z in range(3)]
     sizeindex=2
@@ -29,7 +29,6 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
     #assume within 90 seconds
-    
     i=0
     wrongchecksum=False
     counter=0
