@@ -19,11 +19,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    halfdata=ceil(log(len(data),2)*10)
-    adder=halfdata//3
-    sizelist=[halfdata+adder*z for z in range(3)]
-    sizeindex=2
-    size=sizelist[sizeindex]
+    size=ceil(log(len(data),2)*10)
     print(size,len(data))
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
@@ -56,13 +52,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             sizeFound=True
         except TimeoutError:
             if counter==0:
-                sizeindex=(sizeindex-1)
-                if sizeindex==0:
-                    halfdata=halfdata//2
-                    adder=halfdata//3
-                    sizelist=[halfdata+adder*z for z in range(3)]
-                    sizeindex=2
-                size=sizelist[sizeindex]
+                if size>1:
+                    size=size//2
     print("Max packet size:",size)
     div=[data[j:j+size] for j in range(size,len(data),size)]
     for j in range(len(div)):
