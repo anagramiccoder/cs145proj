@@ -27,7 +27,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
-    partdata=div[j]
+    partdata=div[1]
     msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST0{partdata}"
     sendtime=time.perf_counter()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
