@@ -51,6 +51,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(size)
     counter+=1
     i=1
+    timeout=0
     maxfound=False
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
@@ -61,6 +62,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         #print(msg)
         hashdata=compute_checksum(msg)
         sent=False
+        timeout=0
         while not sent:
             try:
                 sendtime=time.perf_counter()
@@ -86,6 +88,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     size=temp
             except TimeoutError:
                 #print("timeout-resending data...")
+                timeout+=1
                 if counter==1:
                     temp=(size+usize)//2
                     if temp==size and not maxfound:
@@ -99,6 +102,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         if time.perf_counter()-exectime>121:
             break
     print("time taken:",time.perf_counter()-exectime)
+    print("timeout of last packet:",timeout)
     print("data and sent data are the same:",data==addedmsg)
     print("transaction id:",tid)
     if wrongchecksum:# wrong data sent , need to resend whole data
