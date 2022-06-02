@@ -91,6 +91,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 timeout+=1
                 msize=size
                 temp=(size+usize)//2
+                print(usize,msize,size,temp)
                 if not working:
                     size=size-(size//10)
                     usize=size-(size//10)
