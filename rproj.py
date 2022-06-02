@@ -9,6 +9,7 @@ def compute_checksum(packet):
 def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     #port initialization
     tout=10
+    addedmsg=""
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
     #codes here
@@ -33,6 +34,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     exectime=time.perf_counter()
     partdata=data[0]
     msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST0{partdata}"
+    print(msg)
+    addedmsg+=partdata
     hashdata=compute_checksum(msg)
     sendtime=time.perf_counter()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
@@ -71,6 +74,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     break
                 counter+=1
                 sent=True
+                addedmsg+=partdata
             except TimeoutError:
                 timouts+=1
                 print("timeout-resending data...")
@@ -81,6 +85,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         if time.perf_counter()-exectime>121:
             break
     print("time taken:",time.perf_counter()-exectime)
+    print(msg,"\n",addedmsg,msg==addedmsg)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
 if __name__=="__main__":
