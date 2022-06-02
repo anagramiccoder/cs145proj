@@ -24,10 +24,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     i=0
     wrongchecksum=False
     counter=0
-    while i<len(data):
+    while i<=len(data):
         partdata=data[i:i+size]
+        a=int(i+size>=len(data))
         hashdata=compute_checksum(partdata)
-        msg="ID"+uid+transid.decode()+f'{counter:07d}'+partdata
+        msg=f"ID{uid}SN{counter:07d}TXN{transid}LAST{a}{partdata}"
         print(msg)
         try:
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
