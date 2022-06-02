@@ -57,14 +57,14 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
         print("sending packet(packetsize:",size," max possible:",msize,"):",(counter),"/",remaining)
-        partdata=data[i:i+size]
-        a=int(not ((i+size)<len(data)))
-        msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
-        #print(msg)
-        hashdata=compute_checksum(msg)
         sent=False
         timeout=0
         while not sent:
+            partdata=data[i:i+size]
+            a=int(not ((i+size)<len(data)))
+            msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
+            #print(msg)
+            hashdata=compute_checksum(msg)
             try:
                 sendtime=time.perf_counter()
                 client.sendto(msg.encode(), (ip_receiver,port_receiver))
