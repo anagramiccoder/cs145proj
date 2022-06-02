@@ -45,7 +45,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(ptime)
     client.settimeout(ptime+2)
     size=ceil(len(data)/((110/ceil(ptime))))
-    msize=size-1+ceil(size/(size-1)) #distribute the last packet
+    msize=size+ceil(size/(size-1)) #distribute the last packet
     usize=size-2*ceil(size/10)
     size=(msize+usize)//2
     print(size)
