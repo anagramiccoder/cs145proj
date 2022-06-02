@@ -43,7 +43,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     #print(ptime)
     client.settimeout(ptime+2)
-    size=floor(len(data)/((105)/ptime))
+    size=floor(len(data)/((110)/ptime))
     print(size)
     counter+=1
     #assume within 90 seconds
@@ -76,11 +76,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             except TimeoutError:
                 #print("timeout-resending data...")
                 timouts+=1
-                if time.perf_counter()-exectime>121 or timouts>4:
+                if time.perf_counter()-exectime>121 or timouts>2:
                     print("overtime")
                     break
                 pass
-        if time.perf_counter()-exectime>121 or timouts>4:
+        if time.perf_counter()-exectime>121 or timouts>2:
             break
     print("time taken:",time.perf_counter()-exectime)
     print("data and sent data are the same:",data==addedmsg)
