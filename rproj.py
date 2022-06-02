@@ -43,7 +43,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(ptime+2)
-    size=floor(len(data)/((120)/ceil(ptime)))-1
+    size=floor(len(data)/((120)/ceil(ptime)-1))
     print(size)
     counter+=1
     #assume within 90 seconds
@@ -51,7 +51,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     i=1
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
-        print("sending packet:",(i+1),"/",len(div))
+        print("sending packet:",(counter),"/",len(div))
         partdata=data[i:i+size]
         a=int(not ((i+size)<len(data)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
