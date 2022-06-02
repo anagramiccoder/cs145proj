@@ -41,9 +41,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         print(cs[23:],hashdata)
         return
     ptime=(time.perf_counter()-sendtime)
-    #print(ptime)
+    print(ptime)
     client.settimeout(ptime+2)
-    size=ceil(len(data)/((110)/(ptime+0.5)))
+    size=floor(len(data)/((110)/(ptime+0.5)))
     print(size)
     counter+=1
     #assume within 90 seconds
