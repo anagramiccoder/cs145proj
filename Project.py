@@ -27,7 +27,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     while i<len(data):
         partdata=data[i:i+size]
         hashdata=compute_checksum(partdata)
-        msg="ID"+uid+transid.decode()+str(counter)+partdata
+        msg="ID"+uid+transid.decode()+'{counter:07d}'+partdata
         print(msg)
         try:
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
