@@ -95,6 +95,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                         size-=(size//10)
                         usize=size-(size//10)
                     size=temp
+                else:
+                    size=(size+usize)//2
                 if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
