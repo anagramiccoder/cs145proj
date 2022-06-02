@@ -21,7 +21,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile.close()
     if size==-1:
         if len(data)>500:
-            size=ceil((len(data)%500)//10+40)
+            size=ceil((len(data)%500)//12+40)
         else:
             size=ceil(len(data)//12)
     print(size,len(data))
