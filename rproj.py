@@ -56,6 +56,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     #assume within 90 seconds
     div=[data[j:j+size] for j in range(1,len(data),size)]
     for j in range(len(div)):
+        print("sending packet:",(i+1),"/",len(div))
         partdata=div[j]
         a=int(not ((j+1)<len(div)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
