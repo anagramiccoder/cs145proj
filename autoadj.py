@@ -56,12 +56,12 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     working=False
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
-        print("sending packet(packetsize:",size," max possible:",msize,"):",(counter),"/",remaining)
+        print("sending packet(packetsize:",size," max possible:",msize,"):",(counter),"/(max possible)",remaining)
         sent=False
         timeout=0
         while not sent:
             partdata=data[i:i+size]
-            a=int(not ((i+size)<len(data)))
+            a=int(not((i+size)<len(data)))
             msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
             #print(msg)
             hashdata=compute_checksum(msg)
@@ -91,13 +91,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 timeout+=1
                 msize=size
                 temp=(size+usize)//2
-                print(usize,msize,size,temp)
                 if not working:
                     size=size-(size//10)
                     usize=size-(size//10)
                 elif temp==usize and not maxfound:
                     size=usize
                     maxfound=True
+                    msize=size
                 else:
                     size=temp
                 if time.perf_counter()-exectime>121:
