@@ -40,7 +40,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     sendtime=time.perf_counter()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     rdata, addr = client.recvfrom(1024)
-    print(rdata.decode(),hashdata)
+    print((rdata.decode())[23:],hashdata)
     cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
     if cs[23:]!=hashdata:
         print("wrong checksum")
@@ -67,7 +67,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 sendtime=time.perf_counter()
                 client.sendto(msg.encode(), (ip_receiver,port_receiver))
                 rdata, addr = client.recvfrom(1024)
-                print(rdata.decode(),hashdata)
+                print((rdata.decode()_[23:],hashdata)
                 ptime=time.perf_counter()-sendtime
                 print(ptime)
                 cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
@@ -87,7 +87,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         if time.perf_counter()-exectime>121:
             break
     print("time taken:",time.perf_counter()-exectime)
-    print("message: ", data,"\nadded message :",addedmsg)
+    print("message: ", data,"\nadded message :",addedmsg,"\n")
     print("data and sent data are the same:",data==addedmsg)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
