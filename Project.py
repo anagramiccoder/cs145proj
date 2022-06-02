@@ -32,6 +32,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         try:
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
             rdata, addr = client.recvfrom(1024)
+            print(rdata)
             cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
             print(cs,"----",hashdata)
             if cs[23:]!=hashdata:
