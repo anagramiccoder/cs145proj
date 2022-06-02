@@ -51,7 +51,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     #print(ptime)
     client.settimeout(ptime+2)
     size=ceil(len(data)/((110)/ptime))+1
-    #print(size)
+    print(size)
     counter+=1
     #assume within 90 seconds
     div=[data[j:j+size] for j in range(1,len(data),size)]
@@ -59,7 +59,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         partdata=div[j]
         a=int(not ((j+1)<len(div)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
-        print(msg)
+        #print(msg)
         hashdata=compute_checksum(msg)
         sent=False
         timouts=0
@@ -81,6 +81,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 addedmsg+=partdata
             except TimeoutError:
                 #print("timeout-resending data...")
+                timouts+=1
                 if time.perf_counter()-exectime>121 or timouts>4:
                     print("overtime")
                     break
