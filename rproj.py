@@ -33,10 +33,15 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     exectime=time.perf_counter()
     partdata=data[0]
     msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST0{partdata}"
+    hashdata=compute_checksum(msg)
     sendtime=time.perf_counter()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     rdata, addr = client.recvfrom(1024)
     print(rdata.decode())
+    cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
+    if cs[23:]!=hashdata:
+        print("wrong checksum")
+        print(cs[23:],hashdata)
     ptime=(time.perf_counter()-sendtime)+1.5
     print(ptime)
     client.settimeout(ptime)
