@@ -23,7 +23,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
-    socket.settimeout(ceil(exectime-sendtime)+1)
+    client.settimeout(ceil(exectime-sendtime)+1)
     #assume within 90 seconds
     if size==-1:
         size=(len(data)//90)*(ceil(exectime-sendtime)+1)
