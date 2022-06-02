@@ -80,6 +80,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 counter+=1
                 sent=True
             except TimeoutError:
+                print("timeout-resending data...")
                 pass
     print("time taken:",time.perf_counter()-exectime)
     if wrongchecksum:# wrong data sent , need to resend whole data
