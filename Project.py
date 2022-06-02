@@ -19,7 +19,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    size=ceil(log(len(data),2)*9)
+    size=ceil(log(len(data),2)*5)
     print(size,len(data))
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
@@ -30,32 +30,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     counter=0
     sizeFound=False
     tid=transid.decode()
-    while not sizeFound:
-        partdata=data[i:i+size]
-        a=int(i+size>=len(data))
-        msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
-        print(msg)
-        hashdata=compute_checksum(msg)
-        try:
-            sendtime=time.perf_counter()
-            client.sendto(msg.encode(), (ip_receiver,port_receiver))
-            rdata, addr = client.recvfrom(1024)
-            ptime=time.perf_counter()-sendtime
-            print(ptime)
-            client.settimeout(ptime+1)
-            print(rdata.decode())
-            cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
-            if cs[23:]!=hashdata:
-                wrongchecksum=True
-               # break
-            counter+=1
-            sizeFound=True
-        except TimeoutError:
-            if counter==0:
-                if size>1:
-                    size=size//2
-    print("Max packet size:",size)
-    div=[data[j:j+size] for j in range(size,len(data),size)]
+    div=[data[j:j+size] for j in range(0,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
         a=int(not ((j+1)<len(div)))
