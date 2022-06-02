@@ -107,12 +107,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 pass
         if time.perf_counter()-exectime>121:
             break
+        if wrongchecksum:# wrong data sent , need to resend whole data
+            print("wrong checksum")
+            return
     print("time taken:",time.perf_counter()-exectime)
     print("timeout of last packet:",timeout)
     print("data and sent data are the same:",data==addedmsg)
     print("transaction id:",tid)
-    if wrongchecksum:# wrong data sent , need to resend whole data
-        print("wrong checksum")
 if __name__=="__main__":
     arguments=sys.argv
     #setting default values
