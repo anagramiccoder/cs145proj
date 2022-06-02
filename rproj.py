@@ -87,7 +87,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     print("overtime")
                     break
                 pass
-        if time.perf_counter()-exectime>121:
+        if time.perf_counter()-exectime>121 or timouts>4:
             break
     print("time taken:",time.perf_counter()-exectime)
     print("message: ", data,"\nadded message :",addedmsg,"\n")
