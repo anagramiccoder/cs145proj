@@ -23,8 +23,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
     #assume within 90 seconds
-    if size==-1:
-        size=(len(data)//10)
+    halfdata=len(data)//2
+    adder=halfdata//5
+    sizelist=[halfdata+adder*z for z in range(5)]
+    sizeindex=0
+    size=sizelist[sizeindex]
     print(size,len(data))
     i=0
     wrongchecksum=False
@@ -53,10 +56,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             sizeFound=True
         except TimeoutError:
             if counter==0:
-                if size>3:
-                    size=size-2
-                elif size>2:
-                    size=size-1
+                sizeindex=(sizeindex+1)
+                if sizeindex==5:
+                    halfdata=halfdata//2
+                    adder=halfdata//5
+                    sizelist=[halfdata+adder*z for z in range(5)]
+                    sizeindex=0
+                size=sizelist[sizeindex]
     div=[data[j:j+size] for j in range(size,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
