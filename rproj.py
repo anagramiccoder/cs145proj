@@ -15,16 +15,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     #codes here
     #stage1-> transaction ID
     msg="ID"+uid
-    print(msg)
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    if size==-1:
-        if len(data)>500:
-            size=ceil((len(data)%500)//12+40)
-        else:
-            size=ceil(len(data)//12)
-    print(size,len(data))
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
     wrongchecksum=False
@@ -90,7 +83,6 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         if time.perf_counter()-exectime>121 or timouts>4:
             break
     print("time taken:",time.perf_counter()-exectime)
-    print("message: ", data,"\nadded message :",addedmsg,"\n")
     print("data and sent data are the same:",data==addedmsg)
     print("transaction id:",tid)
     if wrongchecksum:# wrong data sent , need to resend whole data
