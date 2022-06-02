@@ -19,14 +19,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
     #assume within 90 seconds
     if size==-1:
         size=(len(data)//10)
-    print(size)
+    print(size,len(data))
     i=0
     wrongchecksum=False
     counter=0
@@ -56,7 +55,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     size=size-2
                 elif size>2:
                     size=size-1
-    div=[data[j:j+size] for j in range(len(data)//size+int(bool(len(data)%size)))]
+    div=[data[j:j+size] for j in range(0,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
         a=int(j+1<len(div))
@@ -68,6 +67,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
             rdata, addr = client.recvfrom(1024)
             ptime=time.perf_counter()-sendtime
+            print(ptime)
             client.settimeout(ptime) #time it took to send the data
             print(rdata.decode())
             cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
