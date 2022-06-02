@@ -34,13 +34,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     exectime=time.perf_counter()
     partdata=data[0]
     msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST0{partdata}"
-    print(msg)
+    #print(msg)
     addedmsg+=partdata
     hashdata=compute_checksum(msg)
     sendtime=time.perf_counter()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     rdata, addr = client.recvfrom(1024)
-    print((rdata.decode())[23:],hashdata)
+    #print((rdata.decode())[23:],hashdata)
     cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
     if cs[23:]!=hashdata:
         print("wrong checksum")
@@ -48,10 +48,10 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         print(cs[23:],hashdata)
         return
     ptime=(time.perf_counter()-sendtime)
-    print(ptime)
+    #print(ptime)
     client.settimeout(ptime+2)
     size=ceil(len(data)/((110)/ptime))+1
-    print(size)
+    #print(size)
     counter+=1
     #assume within 90 seconds
     div=[data[j:j+size] for j in range(1,len(data),size)]
@@ -59,7 +59,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         partdata=div[j]
         a=int(not ((j+1)<len(div)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
-        print(msg)
+        #print(msg)
         hashdata=compute_checksum(msg)
         sent=False
         while not sent:
@@ -67,11 +67,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 sendtime=time.perf_counter()
                 client.sendto(msg.encode(), (ip_receiver,port_receiver))
                 rdata, addr = client.recvfrom(1024)
-                print((rdata.decode())[23:],hashdata)
+                #print((rdata.decode())[23:],hashdata)
                 ptime=time.perf_counter()-sendtime
-                print(ptime)
+                #print(ptime)
                 cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
-                print("the same hash:",(rdata.decode())[23:]==hashdata)
+                #print("the same hash:",(rdata.decode())[23:]==hashdata)
                 if cs[23:]!=hashdata:
                     wrongchecksum=True
                     break
@@ -80,7 +80,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 addedmsg+=partdata
             except TimeoutError:
                 timouts+=1
-                print("timeout-resending data...")
+                #print("timeout-resending data...")
                 if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
