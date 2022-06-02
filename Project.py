@@ -28,7 +28,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         partdata=data[i:i+size]
         a=int(i+size>=len(data))
         hashdata=compute_checksum(partdata)
-        msg=f"ID{uid}SN{counter:07d}TXN{transid}LAST{a}{partdata}"
+        tid=transid.decode()
+        msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
         print(msg)
         try:
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
