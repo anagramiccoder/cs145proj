@@ -46,14 +46,14 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     client.settimeout(ptime+2)
     size=ceil(len(data)/((120/ceil(ptime))))
     size=size-1+ceil(size/(size-1)) #distribute the last packet
-    usize=size-ceil(size/10)
+    usize=size+ceil(size/10)
     print(size)
     counter+=1
     i=1
     maxfound=False
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
-        print("sending packet:",(counter),"/",remaining)
+        print("sending packet(packetsize:",size,"):",(counter),"/",remaining)
         partdata=data[i:i+size]
         a=int(not ((i+size)<len(data)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
