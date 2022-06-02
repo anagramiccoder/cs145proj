@@ -55,7 +55,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     size=size-2
                 elif size>2:
                     size=size-1
-    div=[data[j:j+size] for j in range(0,len(data),size)]
+    div=[data[j:j+size] for j in range(size,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
         a=int(not ((j+1)<len(div)))
