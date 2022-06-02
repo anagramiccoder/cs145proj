@@ -52,8 +52,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             sizeFound=True
         except TimeoutError:
             if counter==0:
-                if size>1:
-                    size-=1
+                if size>3:
+                    size-=3
     print("Max packet size:",size)
     div=[data[j:j+size] for j in range(size,len(data),size)]
     for j in range(len(div)):
