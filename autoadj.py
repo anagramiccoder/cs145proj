@@ -95,7 +95,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 if not working:
                     size=size-(size//10)
                     usize=size-(size//10)
-                elif temp==size and not maxfound:
+                elif temp==usize and not maxfound:
                     size=usize
                     maxfound=True
                 else:
