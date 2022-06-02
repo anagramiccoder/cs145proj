@@ -33,7 +33,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
             rdata, addr = client.recvfrom(1024)
             cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
-            print(cs[23:],hashdata)
+            print(cs,"----",hashdata)
             if cs[23:]!=hashdata:
                 wrongchecksum=True
                 break
@@ -42,6 +42,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         except socket.TimeoutError:
             size=size-1
     if wrongchecksum:# wrong data sent , need to resend whole data
+        client.close()
         print("wrong checksum")
 if __name__=="__main__":
     arguments=sys.argv
