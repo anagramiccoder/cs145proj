@@ -19,7 +19,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    sendtime=time.perf_counter()
+    
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
     exectime=time.perf_counter()
@@ -30,29 +30,53 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     i=0
     wrongchecksum=False
     counter=0
-    while i<=len(data):
+    sizeFound=False
+    tid=transid.decode()
+    while not sizeFound:
         partdata=data[i:i+size]
         a=int(i+size>=len(data))
-        tid=transid.decode()
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
         print(msg)
         hashdata=compute_checksum(msg)
         try:
+            sendtime=time.perf_counter()
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
             rdata, addr = client.recvfrom(1024)
+            ptime=time.perf_counter()-sendtime
             print(rdata.decode())
             cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
             if cs[23:]!=hashdata:
                 wrongchecksum=True
                # break
             counter+=1
-            i+=size
+            sizeFound=True
         except TimeoutError:
             if counter==0:
                 if size>3:
                     size=size-2
                 elif size>2:
                     size=size-1
+    div=[data[j:j+size] for j in range(len(data)//size+int(bool(len(data)%size)))]
+    for j in range(len(div)):
+        partdata=div[j]
+        a=int(j+1<len(div))
+        msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
+        print(msg)
+        hashdata=compute_checksum(msg)
+        try:
+            sendtime=time.perf_counter()
+            client.sendto(msg.encode(), (ip_receiver,port_receiver))
+            rdata, addr = client.recvfrom(1024)
+            ptime=time.perf_counter()-sendtime
+            client.settimeout(ptime) #time it took to send the data
+            print(rdata.decode())
+            cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
+            if cs[23:]!=hashdata:
+                wrongchecksum=True
+                break
+            counter+=1
+        except TimeoutError:
+            pass
     print("time taken:",time.perf_counter()-exectime)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
