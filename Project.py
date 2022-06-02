@@ -58,25 +58,28 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     div=[data[j:j+size] for j in range(0,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
-        a=int(j+1<len(div))
+        a=int(not ((j+1)<len(div)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
         print(msg)
         hashdata=compute_checksum(msg)
-        try:
-            sendtime=time.perf_counter()
-            client.sendto(msg.encode(), (ip_receiver,port_receiver))
-            rdata, addr = client.recvfrom(1024)
-            ptime=time.perf_counter()-sendtime
-            print(ptime)
-            client.settimeout(ptime) #time it took to send the data
-            print(rdata.decode())
-            cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
-            if cs[23:]!=hashdata:
-                wrongchecksum=True
-                break
-            counter+=1
-        except TimeoutError:
-            pass
+        sent=False
+        while not sent:
+            try:
+                sendtime=time.perf_counter()
+                client.sendto(msg.encode(), (ip_receiver,port_receiver))
+                rdata, addr = client.recvfrom(1024)
+                ptime=time.perf_counter()-sendtime
+                print(ptime)
+                client.settimeout(ptime) #time it took to send the data
+                print(rdata.decode())
+                cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
+                if cs[23:]!=hashdata:
+                    wrongchecksum=True
+                    break
+                counter+=1
+                sent=True
+            except TimeoutError:
+                pass
     print("time taken:",time.perf_counter()-exectime)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
