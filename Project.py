@@ -42,7 +42,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 break
             counter+=1
             i+=size
-        except socket.TimeoutError:
+        except TimeoutError:
             size=size-1
     if wrongchecksum:# wrong data sent , need to resend whole data
         client.close()
