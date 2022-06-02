@@ -44,9 +44,10 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(ptime+2)
-    size=ceil(len(data)/((120/ceil(ptime))))
-    size=size-1+ceil(size/(size-1)) #distribute the last packet
-    usize=size+ceil(size/10)
+    size=ceil(len(data)/((110/ceil(ptime))))
+    msize=size-1+ceil(size/(size-1)) #distribute the last packet
+    usize=size-2*ceil(size/10)
+    size=msize
     print(size)
     counter+=1
     i=1
@@ -78,16 +79,20 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 addedmsg+=partdata
                 i+=size
                 if not maxfound:
-                    temp=(usize+size)//2
+                    usize=size
+                    temp=(msize+usize)//2
+                    msize=temp
                     if temp==size:
                         maxfound=True
-                    usize=size-(size//10)
+                    size=temp
             except TimeoutError:
                 #print("timeout-resending data...")
                 if counter==1:
-                    temp=(usize+size)//2
-                    if temp==size:
-                        maxfound=True
+                    temp=(msize+usize)//2
+                    if temp==size and not maxfound:
+                        size-=(size//10)
+                        usize=size-(size//10)
+                    size=temp
                 if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
