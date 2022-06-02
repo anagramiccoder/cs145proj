@@ -83,8 +83,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 if not maxfound:
                     usize=size
                     temp=(msize+usize)//2
-                    if temp==size:
-                        maxfound=True
+                    msize+=msize//10
                     size=temp
             except TimeoutError:
                 #print("timeout-resending data...")
@@ -92,8 +91,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 msize=size
                 temp=(size+usize)//2
                 if temp==size and not maxfound:
-                    size-=(size//10)
-                    usize=size-(size//10)
+                    size=usize
+                    maxfound=True
                 size=temp
                 if time.perf_counter()-exectime>121:
                     print("overtime")
