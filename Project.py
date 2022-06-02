@@ -21,6 +21,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile.close()
     if size==-1:
         size=ceil(log(len(data),3)*5)
+    client.settimeout(120/size)
     print(size,len(data))
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
@@ -57,17 +58,15 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             except TimeoutError:
                 timouts+=1
                 print("timeout-resending data...")
-                if time.perf_counter()-exectime>120:
+                if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
                 pass
+        if time.perf_counter-exectime>121:
+            break
     print("time taken:",time.perf_counter()-exectime)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
-    if timouts<11:
-        senddata(payload,ipr,portr,ports,uid,size)
-    else:
-        senddata(payload,ipr,portr,ports,uid,size-1)
 if __name__=="__main__":
     arguments=sys.argv
     #setting default values
