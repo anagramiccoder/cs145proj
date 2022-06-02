@@ -48,6 +48,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     msize=size+ceil(size/(110/ceil(ptime)-1))+1 #distribute the last packet
     usize=size-2*ceil(size/10)
     size=(msize+usize)//2
+    fixedadder=msize//10
     print(size)
     counter+=1
     i=1
@@ -86,7 +87,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 if not maxfound:
                     usize=size
                     size=(msize+usize)//2
-                    msize+=msize//10
+                    msize+=fixedadder
             except TimeoutError:
                 #print("timeout-resending data...")
                 timeout+=1
