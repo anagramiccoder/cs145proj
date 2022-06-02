@@ -19,16 +19,17 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    client.sendto(msg.encode(), (ip_receiver,port_receiver))
-    transid, addr = client.recvfrom(4096)
-    exectime=time.perf_counter()
-    #assume within 90 seconds
     halfdata=len(data)//2
     adder=halfdata//3
     sizelist=[halfdata+adder*z for z in range(3)]
     sizeindex=2
     size=sizelist[sizeindex]
     print(size,len(data))
+    client.sendto(msg.encode(), (ip_receiver,port_receiver))
+    transid, addr = client.recvfrom(4096)
+    exectime=time.perf_counter()
+    #assume within 90 seconds
+    
     i=0
     wrongchecksum=False
     counter=0
@@ -63,6 +64,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     sizelist=[halfdata+adder*z for z in range(3)]
                     sizeindex=2
                 size=sizelist[sizeindex]
+    print("Max packet size:",size)
     div=[data[j:j+size] for j in range(size,len(data),size)]
     for j in range(len(div)):
         partdata=div[j]
