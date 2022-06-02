@@ -48,10 +48,12 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     counter+=1
     #assume within 90 seconds
     div=[data[j:j+size] for j in range(1,len(data),size)]
-    for j in range(len(div)):
-        print("sending packet:",(j+1),"/",len(div))
-        partdata=div[j]
-        a=int(not ((j+1)<len(div)))
+    i=1
+    while i<=len(data):
+        remaining=len(data)//size+bool(len(data)%size)
+        print("sending packet:",(i+1),"/",len(div))
+        partdata=data[i:i+size]
+        a=int(not ((i+size)<len(data)))
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
         #print(msg)
         hashdata=compute_checksum(msg)
@@ -73,14 +75,18 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 counter+=1
                 sent=True
                 addedmsg+=partdata
+                i+=size
             except TimeoutError:
                 #print("timeout-resending data...")
                 timouts+=1
-                if time.perf_counter()-exectime>121 or timouts>2:
+                if timouts==2 and counter==1:
+                    size=size-(size//10)
+                    timouts=0
+                if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
                 pass
-        if time.perf_counter()-exectime>121 or timouts>2:
+        if time.perf_counter()-exectime>121:
             break
     print("time taken:",time.perf_counter()-exectime)
     print("data and sent data are the same:",data==addedmsg)
