@@ -1,4 +1,3 @@
-from ctypes.wintypes import SIZEL
 import hashlib
 from math import ceil,log,floor
 from opcode import hasjabs
@@ -44,13 +43,12 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(ptime+2)
-    size=ceil(len(data)/((120/ceil(ptime))))
-    size=size-1+ceil(size/(size-1)) #distribute the last packet
-    usize=size-ceil(size/10)
+    size=floor(len(data)/((120/ceil(ptime)-1))
     print(size)
     counter+=1
+    #assume within 90 seconds
+    div=[data[j:j+size] for j in range(1,len(data),size)]
     i=1
-    maxfound=False
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
         print("sending packet:",(counter),"/",len(div))
@@ -60,6 +58,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         #print(msg)
         hashdata=compute_checksum(msg)
         sent=False
+        timouts=0
         while not sent:
             try:
                 sendtime=time.perf_counter()
@@ -77,17 +76,12 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 sent=True
                 addedmsg+=partdata
                 i+=size
-                if not maxfound:
-                    temp=(usize+size)//2
-                    if temp==size:
-                        maxfound=True
-                    usize=size-(size//10)
             except TimeoutError:
                 #print("timeout-resending data...")
-                if counter==1:
-                    temp=(usize+size)//2
-                    if temp==size:
-                        maxfound=True
+                timouts+=1
+                if timouts==2 and counter==1:
+                    size=size-(size//10)
+                    timouts=0
                 if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
