@@ -80,7 +80,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 #print("timeout-resending data...")
                 timouts+=1
                 if timouts==2 and counter==1:
-                    size=size-(size//10)
+                    size=size-ceil(size/10)
                     timouts=0
                 if time.perf_counter()-exectime>121:
                     print("overtime")
