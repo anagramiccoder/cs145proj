@@ -29,11 +29,10 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     while i<=len(data):
         partdata=data[i:i+size]
         a=int(i+size>=len(data))
-        hashdata=compute_checksum(partdata)
-        print(hashdata)
         tid=transid.decode()
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
         print(msg)
+        hashdata=compute_checksum(msg)
         try:
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
             rdata, addr = client.recvfrom(1024)
@@ -45,8 +44,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             counter+=1
             i+=size
         except TimeoutError:
-            if size>2:
-                size=size-1
+            if counter==0:
+                if size>2:
+                    size=size-1
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
 if __name__=="__main__":
