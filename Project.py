@@ -7,9 +7,10 @@ def compute_checksum(packet):
     return hashlib.md5(packet.encode("utf-8")).hexdigest()
 def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     #port initialization
+    tout=10
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
-    client.settimeout(5)
+    client.settimeout(10)
     #codes here
     #stage1-> transaction ID
     msg="ID"+uid
@@ -21,7 +22,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     transid, addr = client.recvfrom(4096)
     #assume within 90 seconds
     if size==-1:
-        size=(len(data)//90)*3
+        size=(len(data)//90)*tout
     i=0
     wrongchecksum=False
     counter=0
@@ -44,7 +45,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             counter+=1
             i+=size
         except TimeoutError:
-            if size<2:
+            if size>2:
                 size=size-1
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
