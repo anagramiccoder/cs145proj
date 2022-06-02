@@ -98,7 +98,6 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 elif temp==size and not maxfound:
                     size=usize
                     maxfound=True
-                size=temp
                 if time.perf_counter()-exectime>121:
                     print("overtime")
                     break
