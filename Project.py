@@ -40,13 +40,12 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
             if cs[23:]!=hashdata:
                 wrongchecksum=True
-                break
+               # break
             counter+=1
             i+=size
         except TimeoutError:
             size=size-1
     if wrongchecksum:# wrong data sent , need to resend whole data
-        client.close()
         print("wrong checksum")
 if __name__=="__main__":
     arguments=sys.argv
