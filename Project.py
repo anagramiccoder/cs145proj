@@ -24,9 +24,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     exectime=time.perf_counter()
     #assume within 90 seconds
     halfdata=len(data)//2
-    adder=halfdata//5
-    sizelist=[halfdata+adder*z for z in range(5)]
-    sizeindex=4
+    adder=halfdata//3
+    sizelist=[halfdata+adder*z for z in range(3)]
+    sizeindex=2
     size=sizelist[sizeindex]
     print(size,len(data))
     i=0
@@ -57,11 +57,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         except TimeoutError:
             if counter==0:
                 sizeindex=(sizeindex-1)
-                if sizeindex==5:
+                if sizeindex==0:
                     halfdata=halfdata//2
-                    adder=halfdata//5
-                    sizelist=[halfdata+adder*z for z in range(5)]
-                    sizeindex=4
+                    adder=halfdata//3
+                    sizelist=[halfdata+adder*z for z in range(3)]
+                    sizeindex=2
                 size=sizelist[sizeindex]
     div=[data[j:j+size] for j in range(size,len(data),size)]
     for j in range(len(div)):
