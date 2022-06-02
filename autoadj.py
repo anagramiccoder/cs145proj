@@ -89,7 +89,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             except TimeoutError:
                 #print("timeout-resending data...")
                 timeout+=1
-                if counter==1 and not maxfound:
+                if not maxfound:
                     temp=(size+usize)//2
                     if temp==size and not maxfound:
                         size-=(size//10)
