@@ -1,4 +1,5 @@
 import hashlib
+from opcode import hasjabs
 import sys
 import socket
 import time
@@ -28,15 +29,15 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         partdata=data[i:i+size]
         a=int(i+size>=len(data))
         hashdata=compute_checksum(partdata)
+        print(hashdata)
         tid=transid.decode()
         msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
         print(msg)
         try:
             client.sendto(msg.encode(), (ip_receiver,port_receiver))
             rdata, addr = client.recvfrom(1024)
-            print(rdata)
+            print(rdata.decode())
             cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
-            print(cs,"----",hashdata)
             if cs[23:]!=hashdata:
                 wrongchecksum=True
                 break
