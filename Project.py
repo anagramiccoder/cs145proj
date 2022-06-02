@@ -11,7 +11,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     tout=10
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
-    client.settimeout(10)
+    client.settimeout(5)
     #codes here
     #stage1-> transaction ID
     msg="ID"+uid
@@ -48,7 +48,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             i+=size
         except TimeoutError:
             if counter==0:
-                if size>2:
+                if size>3:
+                    size=size-2
+                elif size>2:
                     size=size-1
     print("time taken:",time.perf_counter()-exectime)
     if wrongchecksum:# wrong data sent , need to resend whole data
