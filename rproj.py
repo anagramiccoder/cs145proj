@@ -47,7 +47,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         wrongchecksum=True
         print(cs[23:],hashdata)
         return
-    ptime=(time.perf_counter()-sendtime)+1.5
+    ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(ptime)
     size=floor(len(data)/(110/ptime))
