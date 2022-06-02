@@ -11,7 +11,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     tout=10
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
-    client.settimeout(5)
+    client.settimeout(10)
     #codes here
     #stage1-> transaction ID
     msg="ID"+uid
@@ -25,7 +25,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     exectime=time.perf_counter()
     #assume within 90 seconds
     if size==-1:
-        size=(len(data)//90)*(ceil(exectime-sendtime)+1)*10
+        size=(len(data)//10)
+    print(size)
     i=0
     wrongchecksum=False
     counter=0
