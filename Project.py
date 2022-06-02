@@ -20,7 +20,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     data=datafile.readline()
     datafile.close()
     if size==-1:
-        size=ceil(log(len(data),3)*5)
+        size=ceil(len(data)/10)
     client.settimeout(120/size)
     print(size,len(data))
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
