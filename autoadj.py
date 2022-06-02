@@ -53,6 +53,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     i=1
     timeout=0
     maxfound=False
+    working=False
     while i<=len(data):
         remaining=len(data)//size+bool(len(data)%size)
         print("sending packet(packetsize:",size," max possible:",msize,"):",(counter),"/",remaining)
@@ -76,6 +77,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 if cs[23:]!=hashdata:
                     wrongchecksum=True
                     break
+                working=True
                 counter+=1
                 sent=True
                 addedmsg+=partdata
@@ -90,6 +92,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 timeout+=1
                 msize=size
                 temp=(size+usize)//2
+                if not working:
+                    size=size-(size//10)
+                    usize=size-(size//10)
                 if temp==size and not maxfound:
                     size=usize
                     maxfound=True
