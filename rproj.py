@@ -85,7 +85,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         if time.perf_counter()-exectime>121:
             break
     print("time taken:",time.perf_counter()-exectime)
-    print(msg,"\n",addedmsg,msg==addedmsg)
+    print("message: ", data,"\n added message :",addedmsg,data==addedmsg)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
 if __name__=="__main__":
