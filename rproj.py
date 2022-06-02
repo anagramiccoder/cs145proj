@@ -42,6 +42,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     if cs[23:]!=hashdata:
         print("wrong checksum")
         print(cs[23:],hashdata)
+        return
     ptime=(time.perf_counter()-sendtime)+1.5
     print(ptime)
     client.settimeout(ptime)
