@@ -19,7 +19,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile=open(path,"r")
     data=datafile.readline()
     datafile.close()
-    halfdata=log(len(data),2)*10
+    halfdata=ceil(log(len(data),2)*10)
     adder=halfdata//3
     sizelist=[halfdata+adder*z for z in range(3)]
     sizeindex=2
