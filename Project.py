@@ -65,12 +65,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         sent=False
         while not sent:
             try:
-                sendtime=time.perf_counter()
                 client.sendto(msg.encode(), (ip_receiver,port_receiver))
                 rdata, addr = client.recvfrom(1024)
-                ptime=time.perf_counter()-sendtime
-                print(ptime)
-                client.settimeout(ptime) #time it took to send the data
                 print(rdata.decode())
                 cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
                 if cs[23:]!=hashdata:
