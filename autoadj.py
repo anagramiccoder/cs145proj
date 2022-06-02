@@ -99,6 +99,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                     size=usize
                     maxfound=True
                     msize=size
+                elif timeout==2:
+                    msize=(size+usize)//2
+                    size=usize
                 else:
                     size=temp
                 if time.perf_counter()-exectime>121:
