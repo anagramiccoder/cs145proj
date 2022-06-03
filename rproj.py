@@ -1,6 +1,7 @@
 import hashlib
 from math import ceil,log,floor
 from opcode import hasjabs
+from sqlite3 import Time
 import sys
 import socket
 import time
@@ -12,6 +13,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     addedmsg=""
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
+    client.settimeout(30)
     #codes here
     #stage1-> transaction ID
     msg="ID"+uid
@@ -19,7 +21,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     data=datafile.readline()
     datafile.close()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
-    transid, addr = client.recvfrom(4096)
+    try:
+        transid, addr = client.recvfrom(4096)
+    except TimeoutError:
+        print("server busy try again later...")
+        return
     if(transid.decode()=="Existing alive transaction"):
         print("wait for previous Transaction to finish")
         return
