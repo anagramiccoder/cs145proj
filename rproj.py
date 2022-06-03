@@ -20,8 +20,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     datafile.close()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     transid, addr = client.recvfrom(4096)
-    print(transid.decode())
-    
+    if(transid.decode()=="Existing alive transaction"):
+        print("wait for previous Transaction to finish")
+        return
     wrongchecksum=False
     counter=0
     timouts=0
