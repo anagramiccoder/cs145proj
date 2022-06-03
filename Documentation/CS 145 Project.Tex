@@ -1,0 +1,94 @@
+\documentclass[a4paper]{article} % \documentclass{} is the first command in any LaTeX code.  It is used to define what kind of document you are creating such as an article or a book, and begins the document preamble
+\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{paralist}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{caption}  
+\usetikzlibrary{calc}
+\setlength{\headheight}{34.54448pt}
+\pagestyle{myheadings}
+\fancypagestyle{plain}{
+    \lhead{John David Vidad\\2019--10432\\CS 145 LAB 3}
+    \rhead{}
+}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\title{CS 145 Project\:Parameter-Adaptive Reliable UDP-based
+Protocol}
+\author{}
+\date{}
+\begin{document} % All begin commands must be paired with an end command somewhere
+    \maketitle
+    \section{Requirements}
+    \begin{itemize}
+        \item \textbf{Level Declaration:} Level 3
+    \end{itemize}
+    \section{Documentation}
+    \subsection{Code Explanation}
+    The code is divided into 5 major parts: 
+    the possible changing of parameters, 
+    the getting of transaction ID,
+    the estimation of payload size,
+    the adjustment of the estimated of payload size, and
+    the sending of the remaining payload
+    \subsubsection{changing of parameters}
+    With the assumption of valid inputs, we traverse the arguements by pair after the python file arguement.
+    \begin{center}
+        \begin{tikzpicture}
+            \node[above right,
+            inner sep=0](image) at (0,0) {\includegraphics[width=0.9\textwidth]{parameters.png}};
+            \begin{scope}[
+                x={($0.1*(image.south east)$)},
+                y={($0.1*(image.north west)$)}]
+                \draw[very thick,white] (0.7,6.2) rectangle (6,8.5)
+                node[black,fill=white]{\small default values};
+                \draw[very thick,red] (0.75,5.3) rectangle (8,5.9)
+                node[white,fill=red]{\small Traversing by pair};
+                \draw[very thick,blue](1.2,4.4)rectangle(7.4,5.25)
+                node[white,fill=blue]{\small Payload Changing};
+                \draw[very thick,magenta](1.2,3.5)rectangle(7.4,4.35)
+                node[white,fill=magenta]{\small IP of receiver changing};
+                \draw[very thick,cyan](1.2,2.6)rectangle(7.4,3.45)
+                node[white,fill=cyan]{\small changing port of receiver};
+                \draw[very thick,orange](1.2,1.65)rectangle(7.4,2.55)
+                node[white,fill=orange]{\small changing port of sender};
+                \draw[very thick,Melon](1.2,0.7)rectangle(7.4,1.65)
+                node[white,fill=Melon]{\small changing id};
+            \end{scope}
+        \end{tikzpicture}
+    \captionof{figure}{parameter changing snippet}
+    \end{center}
+    Running a python file will have at least 1 arguement and via the argv of the sys module
+    we are able to access it as list of strings with the first index being the python file.
+    To show that this is working, we simply created a show input 
+    wherein it shows all the variables like ip of the receiver, the port numbers,
+    the id, and he period.
+    below is a Screenshot shot of testing and showing that the changing of parameters work.
+    \begin{center}
+        \begin{tikzpicture}
+            \node[above right,
+            inner sep=0](image) at (0,0) {\includegraphics[width=\textwidth]{parameter test.png}};
+            \begin{scope}[
+                x={($0.1*(image.south east)$)},
+                y={($0.1*(image.north west)$)}]
+                
+                \draw[very thick,Purple] (0,9.45) rectangle (9.9,9.9);
+                \draw[latex-, very thick,Purple] (6,9.45) -- ++(0.3,-0.2)
+                node[below,white,fill=Purple]{\small Changing all Parameters};
+                \draw[very thick,ProcessBlue] (0,6.9) rectangle (7,7.5);
+                \draw[latex-, very thick,ProcessBlue] (7,7.2) -- ++(0.3,0)
+                node[right,white,fill=ProcessBlue]{\small default parameters};
+            \end{scope}
+        \end{tikzpicture}
+    \captionof{figure}{parameter changing test}
+    \end{center}
+    Each Test case either changes the default values on indication or
+    stay with the default, for a clearer view, all figures will be viewable via a google drive link provided in the Links section with 
+    names in the figure number.
+\section{Links}
+\begin{itemize}
+    \item \item \textbf{GitHub Link:} Level 3
+\end{itemize}
+\end{document}

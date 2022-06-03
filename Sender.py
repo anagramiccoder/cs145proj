@@ -61,11 +61,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         sent=False
         timouts=0
         while not sent:
-            remaining=len(data)//size+bool(len(data)%size)
+            remaining=len(data)//size+bool(len(data)%size)#compute for possible packets left to be sent
             print("sending packet:",(counter),"/",remaining)
             partdata=data[i:i+size]
             a=int(not ((i+size)<len(data)))
-            msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
+            msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"# packet creation
             #print(msg)
             hashdata=compute_checksum(msg)
             try:
@@ -88,9 +88,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 #print("timeout-resending data...")
                 if counter==1:
                     if size<170:
-                        size=size-ceil(size/10)
+                        size=size-ceil(size/10)#9/10 techincally
                     else:
-                        size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100
+                        size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100,due to congestions
                     timouts=0
                     if size<1:
                         size==1
@@ -105,6 +105,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print("transaction id:",tid)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
+    client.close()
+def testsenddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
+    print("path:",path,"\nipreceiver:",ip_receiver,"\npoert receiver:",port_receiver, "\nport sender:",port_sender,"\nID:", uid)
 if __name__=="__main__":
     arguments=sys.argv
     #setting default values
@@ -125,4 +128,4 @@ if __name__=="__main__":
             ports=int(arguments[i+2])
         elif arguments[i+1]=="-i":
             uid=arguments[i+2]
-    senddata(payload,ipr,portr,ports,uid)
+    testsenddata(payload,ipr,portr,ports,uid)
