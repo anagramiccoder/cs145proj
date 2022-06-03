@@ -49,15 +49,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     size=size+ceil(size/((120/ceil(ptime)-1)))
     print(size)
     counter+=1
-    #assume within 90 seconds
-    div=[data[j:j+size] for j in range(1,len(data),size)]
     i=1
     while i<=len(data):
         sent=False
         timouts=0
         while not sent:
             remaining=len(data)//size+bool(len(data)%size)
-            print("sending packet:",(counter),"/",len(div))
+            print("sending packet:",(counter),"/",remaining)
             partdata=data[i:i+size]
             a=int(not ((i+size)<len(data)))
             msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST{a}{partdata}"
@@ -92,7 +90,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         if time.perf_counter()-exectime>121:
             break
     print("time taken:",time.perf_counter()-exectime)
-    print("data and sent data are the same:",data==addedmsg)
+    print("data and sent data are the same and was ACK'ed:",(data==addedmsg and (time.perf_counter()-exectime)<120.5))
     print("transaction id:",tid)
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
