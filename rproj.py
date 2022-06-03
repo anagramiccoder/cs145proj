@@ -57,7 +57,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(size)
     counter+=1
     i=1
-    while i<=len(data):
+    while i<len(data):
         sent=False
         timouts=0
         while not sent:

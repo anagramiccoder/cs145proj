@@ -1,0 +1,1 @@
+wget http://3.0.248.41:5000/get_data?student_id=9bb836ec -O test.txt
