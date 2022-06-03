@@ -56,7 +56,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     inc=floor(size/((100/ceil(ptime)-1))) #dividing theoretical payload size into n-1 total packets
     size=size+inc# distributing one packet time used by packet 0
     inc=ceil(inc/2)
-    print(size)
+    print(size,inc)
     counter+=1
     i=1
     while i<len(data):
