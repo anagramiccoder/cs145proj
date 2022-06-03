@@ -53,7 +53,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(ptime)
     client.settimeout(floor(ptime)+2)
     size=floor(len(data)/((100/ceil(ptime)))) #assumption, all data CAN take less than 95 seconds to process
-    inc=floor(size/((100/ceil(ptime)-1))) #dividing theoretical payload size into n-1 total packets
+    inc=ceil(size/((100/ceil(ptime)-1))) #dividing theoretical payload size into n-1 total packets
     size=size+inc# distributing one packet time used by packet 0
     inc=ceil(inc/2)
     print(size,inc)
