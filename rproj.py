@@ -81,7 +81,10 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
             except TimeoutError:
                 #print("timeout-resending data...")
                 if counter==1:
-                    size=size-ceil(size/10)
+                    if size<170:
+                        size=size-ceil(size/10)
+                    else:
+                        size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100
                     timouts=0
                 if time.perf_counter()-exectime>121:
                     print("overtime")
