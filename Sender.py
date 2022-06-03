@@ -128,4 +128,4 @@ if __name__=="__main__":
             ports=int(arguments[i+2])
         elif arguments[i+1]=="-i":
             uid=arguments[i+2]
-    testsenddata(payload,ipr,portr,ports,uid)
+    senddata(payload,ipr,portr,ports,uid)
