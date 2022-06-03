@@ -53,7 +53,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     print(ptime)
     client.settimeout(floor(ptime)+2)
     size=floor(len(data)/((100/ceil(ptime)))) #assumption, all data CAN take less than 95 seconds to process
-    size=size+floor(size/((100/ceil(ptime)-1)))# distributing one packet time used by packet 0
+    inc=floor(size/((100/ceil(ptime)-1))) #dividing theoretical payload size into n-1 total packets
+    size=size+inc# distributing one packet time used by packet 0
+    inc=inc//2
     print(size)
     counter+=1
     i=1
@@ -88,7 +90,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 #print("timeout-resending data...")
                 if counter==1:
                     if size<170:
-                        size=size-ceil(size/10)
+                        size=size-inc
+                        inc=inc//2
                     else:
                         size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100
                     timouts=0
