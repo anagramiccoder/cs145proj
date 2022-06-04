@@ -8,7 +8,8 @@ import time
 def compute_checksum(packet):
     return hashlib.md5(packet.encode("utf-8")).hexdigest()
 def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
-    #port initializationaddedmsg=""
+    #port initialization
+    addedmsg=""
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
     client.settimeout(30)
