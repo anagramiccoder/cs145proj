@@ -8,9 +8,7 @@ import time
 def compute_checksum(packet):
     return hashlib.md5(packet.encode("utf-8")).hexdigest()
 def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
-    #port initialization
-    tout=10
-    addedmsg=""
+    #port initializationaddedmsg=""
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     client.bind(("",port_sender))
     client.settimeout(30)
@@ -31,7 +29,6 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
         return
     wrongchecksum=False
     counter=0
-    timouts=0
     tid=transid.decode()
     exectime=time.perf_counter()
     partdata=data[0]
@@ -52,14 +49,13 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(floor(ptime)+2)
-    size=floor(len(data)/((100/ceil(ptime)))) #assumption, all data CAN take less than 95 seconds to process
+    size=floor(len(data)/((100/(ptime+0.2)))) #assumption, all data CAN take less than 95 seconds to process
     size=size+floor(size/((100/ceil(ptime)-1)))# distributing one packet time used by packet 0
     print(size)
     counter+=1
     i=1
     while i<len(data):
         sent=False
-        timouts=0
         while not sent:
             remaining=len(data)//size+bool(len(data)%size)#compute for possible packets left to be sent
             print("sending packet:",(counter),"/",remaining)
@@ -88,10 +84,9 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 #print("timeout-resending data...")
                 if counter==1:
                     if size<170:
-                        size=size-ceil(size/10)#9/10 techincally
+                        size=size-ceil(size/8)#9/10 techincally
                     else:
                         size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100,due to congestions
-                    timouts=0
                     if size<1:
                         size==1
                 if time.perf_counter()-exectime>121:
