@@ -50,8 +50,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(floor(ptime)+2)
-    size=floor(len(data)/((100/(ptime+0.2)))) #assumption, all data CAN take less than 95 seconds to process
-    size=size+floor(size/((100/ceil(ptime)-1)))# distributing one packet time used by packet 0
+    size=floor(len(data)/((90/(ptime+0.2)))) #assumption, all data CAN take less than 95 seconds to process
+    size=size# distributing one packet time used by packet 0
     print(size)
     counter+=1
     i=1
