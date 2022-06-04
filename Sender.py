@@ -50,7 +50,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(ptime+1.5)
-    size=floor(len(data)/((((90-ptime))/(ptime+0.2)))) #assumption, all data CAN take less than 95 seconds to process, as per tests withpout congestion, max time is around 10 s
+    size=floor(len(data)/((((93-ptime))/(ptime+0.2)))) #assumption, all data CAN take less than 95 seconds to process
 
     print(size)
     counter+=1
