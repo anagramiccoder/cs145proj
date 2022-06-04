@@ -85,7 +85,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
                 #print("timeout-resending data...")
                 if counter==1:
                     if size<170:
-                        size=size-ceil(size/8)#9/10 techincally
+                        size=size-ceil(size/10)#9/10 techincally
                     else:
                         size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100,due to congestions
                     if size<1:
