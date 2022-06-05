@@ -7,7 +7,7 @@ import socket
 import time
 def compute_checksum(packet):
     return hashlib.md5(packet.encode("utf-8")).hexdigest()
-def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
+def senddata(path,ip_receiver,port_receiver, port_sender, uid):
     #port initialization
     addedmsg=""
     client= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -15,10 +15,14 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
     client.settimeout(30)
     #codes here
     #stage1-> transaction ID
+    try:
+        datafile=open(path,"r")
+        data=datafile.readline()
+        datafile.close()
+    except FileNotFoundError:
+        print("File Does not Exist")
+        return
     msg="ID"+uid
-    datafile=open(path,"r")
-    data=datafile.readline()
-    datafile.close()
     client.sendto(msg.encode(), (ip_receiver,port_receiver))
     try:
         transid, addr = client.recvfrom(4096)

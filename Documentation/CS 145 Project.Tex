@@ -103,19 +103,25 @@ Protocol}
     For this code section, there are three things that will happen: Initializing sender port, loading payload, and connecting
     for transaction ID.
     \begin{center}
-        \begin{tikzpicture}
-            \node[above right,
-            inner sep=0](image) at (0,0) {\includegraphics[width=0.9\textwidth]{port init.png}};
-            \begin{scope}[
-                x={($0.1*(image.south east)$)},
-                y={($0.1*(image.north west)$)}]
-                
-                \draw[very thick,Purple] (0,7) rectangle (8.2,9.9)
-                node[right,white,fill=Purple]{\small Port Initalization};
-                \end{scope}
-        \end{tikzpicture}
+        \includegraphics[width=\textwidth]{port init.png}
     \captionof{figure}{Port Initalization}
     \end{center}
+    The initalization happens by creating a socket.socket for the UDP.
+    after creating a socket variable, we bind the port fo sender parameter to the socket, 
+    so that it will listen to that packet. To counter busy servers, we set an arbitrary timeout of 30s, 
+    basing on the payloads we get, they don't normally take 15 seconds, but just to be sure, we set a timeout of 30.
+    \vspace{3cm}
+    \begin{center}
+        \includegraphics[width=\textwidth]{loadingdata.png}
+        \captionof{figure}{Loading fo data from path to memory}
+    \end{center}
+    After the initialization of the port, we load the whole payload to the memory.
+    We have a catcher for a FileNotFoundError to catch a file not existing error and 
+    it will end the program if such happens, after telling the user it does not exist.
+    In line 19, we open the file with a read only type of access ('r' tag) since we only need to read it.
+    Assuming no multiple lines of data exists (this is based on testing), on line 20, we read the first line of the file, which
+    is where the payload is contained. AFter reading it, we save it to a variable named data. In line 21, we 
+    close the file.
 
 \section{Links}
 \begin{itemize}
