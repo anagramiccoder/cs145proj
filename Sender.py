@@ -32,10 +32,10 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid):
     if(transid.decode()=="Existing alive transaction"):
         print("wait for previous Transaction to finish")
         return
+    exectime=time.perf_counter()
     wrongchecksum=False
     counter=0
     tid=transid.decode()
-    exectime=time.perf_counter()
     partdata=data[0]
     msg=f"ID{uid}SN{counter:07d}TXN{tid}LAST0{partdata}"
     #print(msg)
@@ -48,14 +48,12 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid):
     cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
     if cs[23:]!=hashdata:
         print("wrong checksum")
-        wrongchecksum=True
-        print(cs[23:],hashdata)
         return
     ptime=(time.perf_counter()-sendtime)
     print(ptime)
     client.settimeout(ptime+1.5)
-    size=floor(len(data)/((((93-ptime))/(ptime+0.2)))) #assumption, all data CAN take less than 95 seconds to process
-
+    possiblePackets=(93-ptime)/(ptime+0.2)
+    size=floor(len(data)/possiblePackets) #assumption, all data CAN take less than 95 seconds to process
     print(size)
     counter+=1
     i=1
@@ -98,7 +96,7 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid):
                     print("overtime")
                     break
                 pass
-        if time.perf_counter()-exectime>121:
+        if time.perf_counter()-exectime>121: #when the total exectime is reached
             break
     print("time taken:",time.perf_counter()-exectime)
     print("data and sent data are the same and was ACK'ed:",(data==addedmsg and (time.perf_counter()-exectime)<120.5))
