@@ -1,7 +1,7 @@
 import hashlib
 from math import ceil,log,floor
-from opcode import hasjabs
-from sqlite3 import Time
+
+
 import sys
 import socket
 import time
@@ -68,12 +68,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid):
             #print(msg)
             hashdata=compute_checksum(msg)
             try:
-                sendtime=time.perf_counter()
                 client.sendto(msg.encode(), (ip_receiver,port_receiver))
                 rdata, addr = client.recvfrom(1024)
-                #print((rdata.decode())[23:],hashdata)
-                ptime=time.perf_counter()-sendtime
-                #print(ptime)
                 cs=rdata.decode()#23 is the number of chars frm ACK to 5 of md5
                 #print("the same hash:",(rdata.decode())[23:]==hashdata)
                 if cs[23:]!=hashdata:
@@ -83,10 +79,11 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid):
                 sent=True
                 addedmsg+=partdata
                 i+=size
+
             except TimeoutError:
                 #print("timeout-resending data...")
                 if counter==1:
-                    if size<170:
+                    if size<200:
                         size=size-ceil(size/10)#9/10 techincally
                     else:
                         size=size//2        #half the datasize, as per trials, no max payload of 150+ or even 100,due to congestions
@@ -104,8 +101,8 @@ def senddata(path,ip_receiver,port_receiver, port_sender, uid):
     if wrongchecksum:# wrong data sent , need to resend whole data
         print("wrong checksum")
     client.close()
-def testsenddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
-    print("path:",path,"\nipreceiver:",ip_receiver,"\npoert receiver:",port_receiver, "\nport sender:",port_sender,"\nID:", uid)
+#def testsenddata(path,ip_receiver,port_receiver, port_sender, uid,size=-1):
+    #print("path:",path,"\nipreceiver:",ip_receiver,"\npoert receiver:",port_receiver, "\nport sender:",port_sender,"\nID:", uid)
 if __name__=="__main__":
     arguments=sys.argv
     #setting default values
